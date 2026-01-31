@@ -24,13 +24,17 @@ class DataIngestion:
         
     def export_collection_as_dataframe(self):
         try:
-            databae_name = self.data_ingestion_config.database_name
+            database_name = self.data_ingestion_config.database_name
             collection_name = self.data_ingestion_config.collection_name
             
             self.mongo_client = pymongo.MongoClient(MONGO_DB_URL)
-            colletion = self.mongo_client[databae_name][collection_name]
+            collection = self.mongo_client[database_name][collection_name]
             
-            df = pd.DataFrame(list(colletion.find()))
+            if collection.count_documents({}) == 0:
+                logging.error(f"MongoDB collection '{collection_name}' is EMPTY. Check your DB!")
+                raise Exception(f"No documents found in {database_name}.{collection_name}")
+            
+            df = pd.DataFrame(list(collection.find()))
             
             if "_id" in df.columns.to_list():
                 df = df.drop(columns=["_id"], axis=1)
@@ -55,7 +59,7 @@ class DataIngestion:
     def split_data_into_train_test(self, dataframe: pd.DataFrame):
         try:
             train_set, test_set = train_test_split(
-                dataframe, test_size = self.data_ingestion_config.train_test_split_ration
+                dataframe, test_size = self.data_ingestion_config.train_test_split_ratio
             )
             logging.info(f"Performed Train Test Split on the dataframe")
             
@@ -69,7 +73,7 @@ class DataIngestion:
             )
             
             test_set.to_csv(
-                self.data_ingestion_config.test_file_path, index = False, header = True
+                self.data_ingestion_config.testing_file_path, index = False, header = True
             )
             
             logging.info(f"Exported Train Test Split successfully!")
