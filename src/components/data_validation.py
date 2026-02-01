@@ -29,20 +29,21 @@ class DataValidation:
         except Exception as e:
             raise ConcreteStrengthException(e, sys)
     
-    def validate_number_of_columns(self, dataframe:pd.DataFrame):
+    def validate_number_of_columns(self, dataframe: pd.DataFrame):
         try:
-            expected_counts = len(self._schema_config)
+            # Instead of len(self._schema_config), count the items inside 'columns'
+            expected_counts = len(self._schema_config["columns"]) 
             actual_count = len(dataframe.columns)
-            
+        
             logging.info(f"Checking columns.... Expected {expected_counts}, Gots: {actual_count}")
-            
+        
             if actual_count == expected_counts:
                 return True
             return False
         except Exception as e:
             raise ConcreteStrengthException(e, sys)
 
-    def detect_dataset_drift(self, base_df, current_df, threshold = 0.5)-> bool:
+    def detect_dataset_drift(self, base_df, current_df, threshold = 0.5) -> bool:
         try:
             status = True
             report = {}
@@ -58,15 +59,26 @@ class DataValidation:
                 else:
                     drift_found = True
                     status = False
-                    
+                return status
                 report.update({column: {
                     "p_value": float(drift_test.pvalue),
                     "drift_status": drift_found
                 }})
                 
             drift_report_path = self.data_validation_config.drift_report_file_path
+            
             os.makedirs(os.path.dirname(drift_report_path), exist_ok=True)
-            write_yaml_file(file_path=drift_report_path, content=report)
+            
+            abs_path = os.path.abspath(drift_report_path)
+            
+            logging.info(f"Attempting to save drift report to: {abs_path}")
+            
+            write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=report)
+            
+            if os.path.exists(drift_report_path):
+                logging.info(f"Drift report successfully created at: {abs_path}")
+            else:
+                logging.error(f"FILE SYSTEM ERROR: Report not found at {abs_path} after write command.")
                 
         except Exception as e:
             raise ConcreteStrengthException(e, sys)
