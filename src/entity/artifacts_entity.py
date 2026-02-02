@@ -16,10 +16,28 @@ class DataValidationArtifact:
     drift_report_file_path: str
     
     
+@dataclass
+class DataTransformationArtifact:
+    transformed_object_file_path: str
+    transformed_train_file_path: str
+    transformed_test_file_path: str
+        
+@dataclass
+class RegressionMetricArtifact:
+    f1_score: float      
+    precision_score: float 
+    recall_score: float    
+
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_file_path: str # The physical location of the trained brain (.pkl file)
     
+    # We store two scorecards: one for data it saw, and one for data it never saw.
+    train_metric_artifact: RegressionMetricArtifact
+    test_metric_artifact: RegressionMetricArtifact 
     
-    
-    
+
     
     
     
