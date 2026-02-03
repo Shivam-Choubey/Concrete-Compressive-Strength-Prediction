@@ -4,12 +4,9 @@ from typing import List
 def get_requirements(file_path: str) -> List[str]:
     requirements = []
     with open(file_path) as file_obj:
-        # 1. Read lines
-        # 2. Strip whitespaces and newlines
-        # 3. Filter out empty lines and the '-e .' trigger
+
         requirements = [req.strip() for req in file_obj.readlines()]
         
-        # This filter is more robust than .remove()
         requirements = [req for req in requirements if req and not req.startswith('-e')]
             
     return requirements

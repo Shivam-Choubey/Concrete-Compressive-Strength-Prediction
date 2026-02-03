@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import pandas as pd
+from pyparsing import col
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
 
@@ -66,13 +67,26 @@ class DataTransformation:
                 self.data_validation_artifact.valid_test_file_path
             )
 
-            # STEP 2: Separate input features and target variable
-            input_feature_train_df = train_df.drop(columns=[TARGET_COLUMN], axis=1)
+            train_df.columns = train_df.columns.str.strip()
+            test_df.columns = test_df.columns.str.strip()
+           
+            target_col = None
+            for col in train_df.columns:
+                if col.lower().startswith("concrete") and "strength" in col.lower():
+                    target_col = col
+                    break
+            if target_col is None:
+                raise ConcreteStrengthException(
+                    f"Target column not found. Columns: {train_df.columns.tolist()}",
+                        sys
+                    )            
+                
+            input_feature_train_df = train_df.drop(columns=[TARGET_COLUMN])
             target_feature_train_df = train_df[TARGET_COLUMN]
 
-            input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN], axis=1)
+            input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN])
             target_feature_test_df = test_df[TARGET_COLUMN]
-
+                
             # STEP 3: Get the transformation blueprint
             preprocessor = self.get_data_transformer_object()
 

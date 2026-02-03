@@ -54,8 +54,7 @@ class ModelTrainer:
                 "Random Forest": RandomForestRegressor(),
                 "Gradient Boosting": GradientBoostingRegressor(),
                 "XGBoost": XGBRegressor(objective="reg:squarederror"),
-                "LightGBM": LGBMRegressor(),
-                "CatBoost": CatBoostRegressor(verbose=0)
+                "LightGBM": LGBMRegressor()
             }
 
             # STEP 2: Hyperparameter grids (tuning knobs)
@@ -90,10 +89,6 @@ class ModelTrainer:
                     "learning_rate": [0.05, 0.1],
                     "n_estimators": [100, 200]
                 },
-                "CatBoost": {
-                    "depth": [6, 8],
-                    "learning_rate": [0.05, 0.1]
-                }
             }
 
             # STEP 3: Evaluate all models

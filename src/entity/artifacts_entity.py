@@ -22,11 +22,13 @@ class DataTransformationArtifact:
     transformed_train_file_path: str
     transformed_test_file_path: str
         
+
 @dataclass
 class RegressionMetricArtifact:
-    f1_score: float      
-    precision_score: float 
-    recall_score: float    
+    r2_score: float
+    mae: float
+    rmse: float
+
 
 
 @dataclass

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <div class="info-card">
+        <h2><i class="fas fa-info-circle"></i> About This AI Model</h2>
+        <p>This predictor uses a trained machine learning model to estimate the compressive strength of concrete based on its composition and age.</p>
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-cube"></i>
+                <span>8 Input Parameters</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-brain"></i>
+                <span>ML Model</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <span>Real-time Prediction</span>
+            </div>
+        </div>
+    </div>
+    
+    <form id="prediction-form" method="POST" action="{{ url_for('predict') }}">
+        <div class="form-grid">
+            <div class="input-group">
+                <label for="cement">
+                    <i class="fas fa-industry"></i> Cement (kg/m³)
+                </label>
+                <input type="number" id="cement" name="cement" step="0.1" min="0" value="300.0" required>
+                <div class="input-help">Typical range: 100-500 kg/m³</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="slag">
+                    <i class="fas fa-fire"></i> Blast Furnace Slag (kg/m³)
+                </label>
+                <input type="number" id="slag" name="slag" step="0.1" min="0" value="0.0" required>
+                <div class="input-help">By-product of iron production</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="fly_ash">
+                    <i class="fas fa-cloud"></i> Fly Ash (kg/m³)
+                </label>
+                <input type="number" id="fly_ash" name="fly_ash" step="0.1" min="0" value="0.0" required>
+                <div class="input-help">Coal combustion by-product</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="water">
+                    <i class="fas fa-tint"></i> Water (kg/m³)
+                </label>
+                <input type="number" id="water" name="water" step="0.1" min="0" value="180.0" required>
+                <div class="input-help">Water-cement ratio affects strength</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="superplasticizer">
+                    <i class="fas fa-flask"></i> Superplasticizer (kg/m³)
+                </label>
+                <input type="number" id="superplasticizer" name="superplasticizer" step="0.1" min="0" value="5.0" required>
+                <div class="input-help">Reduces water requirement</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="coarse_agg">
+                    <i class="fas fa-mountain"></i> Coarse Aggregate (kg/m³)
+                </label>
+                <input type="number" id="coarse_agg" name="coarse_agg" step="0.1" min="0" value="1000.0" required>
+                <div class="input-help">Gravel or crushed stone</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="fine_agg">
+                    <i class="fas fa-gem"></i> Fine Aggregate (kg/m³)
+                </label>
+                <input type="number" id="fine_agg" name="fine_agg" step="0.1" min="0" value="800.0" required>
+                <div class="input-help">Sand or fine particles</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="age">
+                    <i class="fas fa-calendar-alt"></i> Age (days)
+                </label>
+                <input type="number" id="age" name="age" min="1" value="28" required>
+                <div class="input-help">Curing time (standard: 28 days)</div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-predict">
+                <i class="fas fa-crystal-ball"></i> Predict Strength
+            </button>
+            <button type="button" class="btn-reset" onclick="resetForm()">
+                <i class="fas fa-redo"></i> Reset Form
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - Concrete Strength Predictor{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-header">
+        <div class="result-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h2>Prediction Result</h2>
+    </div>
+    
+    <div class="prediction-card">
+        <div class="strength-display">
+            <div class="strength-value">{{ prediction }} MPa</div>
+            <div class="strength-label">Compressive Strength</div>
+        </div>
+        
+        <div class="strength-meter">
+            {% set pred_num = prediction | float %}
+            {% if pred_num < 20 %}
+                {% set level = 'low' %}
+                {% set width = '25%' %}
+            {% elif pred_num < 40 %}
+                {% set level = 'medium' %}
+                {% set width = '50%' %}
+            {% elif pred_num < 60 %}
+                {% set level = 'good' %}
+                {% set width = '75%' %}
+            {% else %}
+                {% set level = 'high' %}
+                {% set width = '100%' %}
+            {% endif %}
+            
+            <div class="meter-bar">
+                <div class="meter-fill {{ level }}" style="width: {{ width }}"></div>
+            </div>
+            <div class="meter-labels">
+                <span>Low</span>
+                <span>Medium</span>
+                <span>Good</span>
+                <span>High</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="input-summary">
+        <h3><i class="fas fa-list-alt"></i> Input Summary</h3>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="summary-label">Cement</span>
+                <span class="summary-value">{{ Cement }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Blast Furnace Slag</span>
+                <span class="summary-value">{{ slag }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Fly Ash</span>
+                <span class="summary-value">{{ fly_ash }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Water</span>
+                <span class="summary-value">{{ Water }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Superplasticizer</span>
+                <span class="summary-value">{{ Superplasticizer }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Coarse Aggregate</span>
+                <span class="summary-value">{{ coarse_agg }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Fine Aggregate</span>
+                <span class="summary-value">{{ fine_agg }} kg/m³</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Age</span>
+                <span class="summary-value">{{ age }} days</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <a href="{{ url_for('home') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> New Prediction
+        </a>
+        <button class="btn-share" onclick="shareResult()">
+            <i class="fas fa-share-alt"></i> Share Result
+        </button>
+    </div>
+</div>
+{% endblock %}
